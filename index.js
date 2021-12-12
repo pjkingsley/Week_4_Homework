@@ -1,15 +1,13 @@
 let questionNumber = 0;
+const timerBox = document.getElementById('timer');
 const gameBox = document.getElementById('gameBox');
 const question = document.getElementById('question');
-const answerA = document.getElementById('answerA');
-const answerB = document.getElementById('answerB');
-const answerC = document.getElementById('answerC');
-const answerD = document.getElementById('answerD');
 const startBtn = document.getElementById('start');
 const questionBox = document.getElementById('questionBox');
 const answers = ['answerA', 'answerB', 'answerC', 'answerD'];
 let currentScore = 0;
 const highScores = [];
+let time = 0;
 
 
 startBtn.addEventListener('click', function (event){
@@ -17,8 +15,12 @@ startBtn.addEventListener('click', function (event){
     questionBox.innerHTML = '';
     currentScore = 0;
     startBtn.style.visibility = 'hidden';
+    questionBox.type = 'A';
     for (i = 0; i < answers.length; i++) {
         answer = document.createElement('li');
+        answer.style.border = 'solid 1px black';
+        answer.style.padding = '5px';
+        answer.style.backgroundColor = 'green';
         answer.setAttribute('id', answers[i]);
         questionBox.append(answer);
     };
@@ -27,7 +29,26 @@ startBtn.addEventListener('click', function (event){
     let answerC = document.getElementById('answerC');
     let answerD = document.getElementById('answerD');
     const gameBoxHandler = function () {
+        const setTime = function () {
+            time = 15;
+            let timerInterval = setInterval(function(){
+                time--;
+                timerBox.textContent = time;
+                if (time === 0) {
+                    clearInterval(timerInterval);
+                    endGame();
+                    return;
+                }
+            }, 1000);
+        };
+        const endGame = function () {
+            questionNumber = 5;
+            timerBox.style.visibility = 'hidden';
+            gameBoxHandler();
+        };
+        timerBox.style.visibility = 'visible';
         if (questionNumber === 0) {
+            setTime();
             question.innerHTML = 'First Question';
             let answerA = document.getElementById('answerA');
             answerA.innerHTML = 'wrong answer';
@@ -42,6 +63,7 @@ startBtn.addEventListener('click', function (event){
             answerD.innerHTML = 'wrong answer';
             answerD.setAttribute('class', 'wrong');   
         } else if (questionNumber === 1) {
+            setTime();
             question.innerHTML = 'Second Question';
             answerA.innerHTML = 'wrong answer';
             answerA.setAttribute('class', 'wrong');
@@ -53,6 +75,7 @@ startBtn.addEventListener('click', function (event){
             answerD.setAttribute('class', 'wrong');
     
         } else if (questionNumber === 2) {
+            setTime();
             question.innerHTML = 'Third Question';
             answerA.innerHTML = 'right answer';
             answerA.setAttribute('class', 'right');
@@ -64,6 +87,7 @@ startBtn.addEventListener('click', function (event){
             answerD.setAttribute('class', 'wrong');
     
         } else if (questionNumber === 3) {
+            setTime();
             question.innerHTML = 'Fourth Question';
             answerA.innerHTML = 'right answer';
             answerA.setAttribute('class', 'right');
@@ -75,6 +99,7 @@ startBtn.addEventListener('click', function (event){
             answerD.setAttribute('class', 'wrong');
             
         } else if (questionNumber === 4) {
+            setTime();
             question.innerHTML = 'Fith Question';
             answerA.innerHTML = 'wrong answer';
             answerA.setAttribute('class', 'wrong');
@@ -87,9 +112,8 @@ startBtn.addEventListener('click', function (event){
         } else {  
             questionBox.innerHTML = '';
             questionNumber = 0;
-            
+            timerBox.style.visibility = 'hidden';
             question.innerHTML = `Your Score is ${currentScore}!`;
-            console.log(questionBox);
             const userName = document.createElement('input');
                 userName.type = 'text';
                 userName.setAttribute('id', 'userName');
@@ -99,22 +123,31 @@ startBtn.addEventListener('click', function (event){
                         const name = document.getElementById('userName').value;
                         console.log(name);
                         console.log(currentScore);
-                        highScores.push(`${name}, ${currentScore}`);
+                        highScores.push({
+                            name: name,
+                            score: currentScore
+                        });
                         console.log(highScores);
                         localStorage.setItem('highScore', JSON.stringify(highScores));
                         const scoreList = JSON.parse(localStorage.getItem('highScore'));
                         console.log(scoreList);
+                        scoreList.sort((a,b)=> {
+                            return b.score -a.score;
+                        });
+                        console.log(scoreList);
                         questionBox.innerHTML = '';
                         for (i = 0; i < scoreList.length; i++) {
                             score = document.createElement('li');
-                            score.innerHTML = scoreList[i];
+                            const scoreBoardName = scoreList[i].name;
+                            const scoreBoardScore = scoreList[i].score;
+                            score.innerHTML = `${scoreBoardName}, ${scoreBoardScore}`;
                             questionBox.append(score);
-                            startBtn.innerHTML = 'Play again?';
-                            
+                            startBtn.innerHTML = 'Play again?';                          
                         };
                         startBtn.style.visibility = 'visible';
                     };
                 });
+            questionBox.type = '1';
             questionBox.append(userName);
         }};     
     gameBoxHandler();
@@ -126,7 +159,7 @@ startBtn.addEventListener('click', function (event){
                 console.log('right');
                 questionNumber++;
                 console.log(questionNumber);
-                currentScore = currentScore + 20;
+                currentScore = currentScore + time + 10;
                 console.log(currentScore);
                 gameBoxHandler();
             } else {
@@ -139,74 +172,4 @@ startBtn.addEventListener('click', function (event){
     };
 });
 
-const gameBoxHandler = function () {
-    if (questionNumber.value === 0) {
-        question.innerHTML = 'First Question';
-        answerA.innerHTML = 'wrong answer';
-        answerA.setAttribute('class', 'wrong');
-        answerB.innerHTML = 'right answer';
-        answerB.setAttribute('class', 'right');
-        answerC.innerHTML = 'wrong answer';
-        answerC.setAttribute('class', 'wrong');
-        answerD.innerHTML = 'wrong answer';
-        answerD.setAttribute('class', 'wrong');
-
-    } else if (questionNumber === 1) {
-        question.innerHTML = 'Second Question';
-        answerA.innerHTML = 'wrong answer';
-        answerA.setAttribute('class', 'wrong');
-        answerB.innerHTML = 'wrong answer';
-        answerD.setAttribute('class', 'wrong');
-        answerC.innerHTML = 'right answer';
-        answerC.setAttribute('class', 'right');
-        answerD.innerHTML = 'wrong answer';
-        answerD.setAttribute('class', 'wrong');
-
-    } else if (questionNumber === 2) {
-        question.innerHTML = 'Third Question';
-        answerA.innerHTML = 'right answer';
-        answerA.setAttribute('class', 'right');
-        answerB.innerHTML = 'wrong answer';
-        answerD.setAttribute('class', 'wrong');
-        answerC.innerHTML = 'wrong answer';
-        answerC.setAttribute('class', 'wrong');
-        answerD.innerHTML = 'wrong answer';
-        answerD.setAttribute('class', 'wrong');
-
-    } else if (questionNumber === 3) {
-        question.innerHTML = 'Third Question';
-        answerA.innerHTML = 'right answer';
-        answerA.setAttribute('class', 'right');
-        answerB.innerHTML = 'wrong answer';
-        answerD.setAttribute('class', 'wrong');
-        answerC.innerHTML = 'wrong answer';
-        answerC.setAttribute('class', 'wrong');
-        answerD.innerHTML = 'wrong answer';
-        answerD.setAttribute('class', 'wrong');
-        
-    }else if (questionNumber === 4) {
-        question.innerHTML = 'Fith Question';
-        answerA.innerHTML = 'wrong answer';
-        answerA.setAttribute('class', 'wrong');
-        answerB.innerHTML = 'wrong answer';
-        answerB.setAttribute('class', 'wrong');
-        answerC.textContent = 'wrong answer';
-        answerC.setAttribute('class', 'wrong');
-        answerD.innerHTML = 'right answer';
-        answerD.setAttribute('class', 'right');
-    };
-};
-
-const playerChoiceHandler = function (event) {
-    let rightAnswer = document.querySelector('.right');
-    console.log(rightAnswer);
-    if (event.target(rightAnswer)) {
-        currentScore.value = currentScore.value + 20;
-        questionNumber.value = questionNumber.value + 1;
-        gameBoxHandler();
-    } else {
-        questionNumber.value = questionNumber.value + 1;
-        gameBoxHandler();
-    };
-};
 
