@@ -87,10 +87,10 @@ startBtn.addEventListener('click', function (event){
         } else if (questionNumber === 3) {
             
             question.innerHTML = `What is the expected output of the following code:
-const arr = [1, 2, 3]
-for(i = 0; i < arr.length; i++) {
-    console.log(arr[i]);
-}`;
+            const arr = [1, 2, 3]
+            for(i = 0; i < arr.length; i++) {
+            console.log(arr[i]);
+            }`;
             answerA.innerHTML = `1 2 3`;
             answerA.setAttribute('class', 'right');
             answerB.innerHTML = '(1, 2, 3)';
