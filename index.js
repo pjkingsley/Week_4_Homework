@@ -8,7 +8,7 @@ const answers = ['answerA', 'answerB', 'answerC', 'answerD'];
 let currentScore = 0;
 const highScores = [];
 let time = 0;
-
+let right = 0;
 
 startBtn.addEventListener('click', function (event){
     event.preventDefault();
@@ -20,7 +20,6 @@ startBtn.addEventListener('click', function (event){
         answer = document.createElement('li');
         answer.style.border = 'solid 1px black';
         answer.style.padding = '5px';
-        answer.style.backgroundColor = 'green';
         answer.setAttribute('id', answers[i]);
         questionBox.append(answer);
     };
@@ -28,91 +27,97 @@ startBtn.addEventListener('click', function (event){
     let answerB = document.getElementById('answerB');
     let answerC = document.getElementById('answerC');
     let answerD = document.getElementById('answerD');
-    const gameBoxHandler = function () {
-        const setTime = function () {
-            time = 15;
+    const endGame = function () {
+        questionNumber = 5;
+        timerBox.style.visibility = 'hidden';
+        gameBoxHandler();
+    };
+    const setTime = function () {
+            time = 60;
             let timerInterval = setInterval(function(){
                 time--;
                 timerBox.textContent = time;
                 if (time === 0) {
                     clearInterval(timerInterval);
                     endGame();
-                    return;
                 }
             }, 1000);
         };
-        const endGame = function () {
-            questionNumber = 5;
-            timerBox.style.visibility = 'hidden';
-            gameBoxHandler();
-        };
+    setTime();
+    const gameBoxHandler = function () {
         timerBox.style.visibility = 'visible';
-        if (questionNumber === 0) {
-            setTime();
-            question.innerHTML = 'First Question';
+        if (questionNumber === 0) {      
+            question.innerHTML = 'Which of these denotes an object?';
             let answerA = document.getElementById('answerA');
-            answerA.innerHTML = 'wrong answer';
+            answerA.innerHTML = '()';
             answerA.setAttribute('class', 'wrong');
             let answerB = document.getElementById('answerB');
-            answerB.innerHTML = 'right answer';
+            answerB.innerHTML = '{}';
             answerB.setAttribute('class', 'right');
             let answerC = document.getElementById('answerC');
-            answerC.innerHTML = 'wrong answer';
+            answerC.innerHTML = '[]';
             answerC.setAttribute('class', 'wrong');
             let answerD = document.getElementById('answerD');
-            answerD.innerHTML = 'wrong answer';
+            answerD.innerHTML = '``';
             answerD.setAttribute('class', 'wrong');   
         } else if (questionNumber === 1) {
-            setTime();
-            question.innerHTML = 'Second Question';
-            answerA.innerHTML = 'wrong answer';
+            
+            question.innerHTML = 'Which is the correct syntax for finding an element by its Id?';
+            answerA.innerHTML = `window.findId('yourId')`;
             answerA.setAttribute('class', 'wrong');
-            answerB.innerHTML = 'wrong answer';
+            answerB.innerHTML = `'document.getElementsByAttribute('id', yourId)`;
             answerD.setAttribute('class', 'wrong');
-            answerC.innerHTML = 'right answer';
+            answerC.innerHTML = `document.getElementById('yourId')`;
             answerC.setAttribute('class', 'right');
-            answerD.innerHTML = 'wrong answer';
+            answerD.innerHTML = `window.getElementsByType('id', 'yourId')`;
             answerD.setAttribute('class', 'wrong');
     
         } else if (questionNumber === 2) {
-            setTime();
-            question.innerHTML = 'Third Question';
-            answerA.innerHTML = 'right answer';
+            
+            question.innerHTML = 'Which of these tags is not declaring a variable?';
+            answerA.innerHTML = 'variable';
             answerA.setAttribute('class', 'right');
-            answerB.innerHTML = 'wrong answer';
+            answerB.innerHTML = 'var';
             answerD.setAttribute('class', 'wrong');
-            answerC.innerHTML = 'wrong answer';
+            answerC.innerHTML = 'const';
             answerC.setAttribute('class', 'wrong');
-            answerD.innerHTML = 'wrong answer';
+            answerD.innerHTML = 'let';
             answerD.setAttribute('class', 'wrong');
     
         } else if (questionNumber === 3) {
-            setTime();
-            question.innerHTML = 'Fourth Question';
-            answerA.innerHTML = 'right answer';
+            
+            question.innerHTML = `What is the expected output of the following code:
+const arr = [1, 2, 3]
+for(i = 0; i < arr.length; i++) {
+    console.log(arr[i]);
+}`;
+            answerA.innerHTML = `1 2 3`;
             answerA.setAttribute('class', 'right');
-            answerB.innerHTML = 'wrong answer';
+            answerB.innerHTML = '(1, 2, 3)';
             answerD.setAttribute('class', 'wrong');
-            answerC.innerHTML = 'wrong answer';
+            answerC.innerHTML = 'arr1, arr2, arr3';
             answerC.setAttribute('class', 'wrong');
-            answerD.innerHTML = 'wrong answer';
+            answerD.innerHTML = `3, 2, 1`;
             answerD.setAttribute('class', 'wrong');
             
         } else if (questionNumber === 4) {
-            setTime();
-            question.innerHTML = 'Fith Question';
-            answerA.innerHTML = 'wrong answer';
+            
+            question.innerHTML = 'How many functions can you have nested in another function?';
+            answerA.innerHTML = 'none';
             answerA.setAttribute('class', 'wrong');
-            answerB.innerHTML = 'wrong answer';
+            answerB.innerHTML = 'two';
             answerB.setAttribute('class', 'wrong');
-            answerC.textContent = 'wrong answer';
+            answerC.textContent = 'four';
             answerC.setAttribute('class', 'wrong');
-            answerD.innerHTML = 'right answer';
+            answerD.innerHTML = 'as many as you can keep track of :-)';
             answerD.setAttribute('class', 'right');
         } else {  
             questionBox.innerHTML = '';
             questionNumber = 0;
             timerBox.style.visibility = 'hidden';
+            console.log(right + 'answers right');
+            console.log(time);
+            currentScore = right * (time/5);
             question.innerHTML = `Your Score is ${currentScore}!`;
             const userName = document.createElement('input');
                 userName.type = 'text';
@@ -158,12 +163,12 @@ startBtn.addEventListener('click', function (event){
             if (event.target.classList.contains('right')){
                 console.log('right');
                 questionNumber++;
+                right++;
                 console.log(questionNumber);
-                currentScore = currentScore + time + 10;
-                console.log(currentScore);
                 gameBoxHandler();
             } else {
                 console.log('wrong');
+                time = time - 5;
                 questionNumber++;
                 console.log(questionNumber);
                 gameBoxHandler();

@@ -2,6 +2,7 @@ body {
     margin: auto;
 }
 
-nav {
-   margin: auto; 
+#timer {
+   margin: auto;
+   float: right;
 }
